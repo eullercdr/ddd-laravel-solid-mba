@@ -10,9 +10,9 @@ use Core\Repositories\ContractRepositoryInterface;
 class GenerateInvoicesUseCase
 {
 
-  // public function __construct(private ContractRepositoryInterface $contractRepository)
-  // {
-  // }
+  public function __construct(private ContractRepositoryInterface $repository)
+  {
+  }
 
   /** array
    * @param array $input
@@ -20,8 +20,7 @@ class GenerateInvoicesUseCase
    */
   public function execute(array $input)
   {
-    $repository = new ContractDatabaseRepository();
-    $contracts = $repository->list();
+    $contracts = $this->repository->list();
     $output = [];
     foreach ($contracts as $contract) {
       $payments = $contract->payments;

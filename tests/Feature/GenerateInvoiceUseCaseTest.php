@@ -2,6 +2,7 @@
 
 use App\Models\Contract;
 use Core\GenerateInvoicesUseCase;
+use Core\Repositories\ContractDatabaseRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -22,7 +23,8 @@ beforeEach(function () {
 });
 
 test('should generate nfes by cash type', function () {
-    $generateInvoicesUsecase = new GenerateInvoicesUseCase();
+    $repository = new ContractDatabaseRepository();
+    $generateInvoicesUsecase = new GenerateInvoicesUseCase($repository);
     $input = [
         'month' => 1,
         'year' => 2024,
@@ -34,7 +36,8 @@ test('should generate nfes by cash type', function () {
 });
 
 test('should generate nfes by accrual type of first month', function () {
-    $generateInvoicesUsecase = new GenerateInvoicesUseCase();
+    $repository = new ContractDatabaseRepository();
+    $generateInvoicesUsecase = new GenerateInvoicesUseCase($repository);
     $input = [
         'month' => 1,
         'year' => 2024,
@@ -46,7 +49,8 @@ test('should generate nfes by accrual type of first month', function () {
 });
 
 test('should generate nfes by accrual type of second month', function () {
-    $generateInvoicesUsecase = new GenerateInvoicesUseCase();
+    $repository = new ContractDatabaseRepository();
+    $generateInvoicesUsecase = new GenerateInvoicesUseCase($repository);
     $input = [
         'month' => 2,
         'year' => 2024,
