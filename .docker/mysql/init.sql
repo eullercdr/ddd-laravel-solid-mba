@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS `design_patterns` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS `design_patterns_testing` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
