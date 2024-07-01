@@ -2,18 +2,22 @@
 
 namespace Core\Entities;
 
+use Core\InvoiceGenerateStrategy;
+use Core\InvoiceGenerationFactory;
+use Core\InvoiceGenerationStrategy;
 use DateInterval;
 use DateTime;
 
 class Contract
 {
+
   public function __construct(
     private string $id,
     private DateTime $date,
     private float $amount,
     private int $periods,
     private string $description,
-    private array $payments = []
+    private array $payments = [],
   ) {
   }
 
@@ -53,39 +57,18 @@ class Contract
     return $this;
   }
 
-  public function generateInvoices(int $month, int $year, string $type)
+  public function getBalance(): float
   {
-    $invoices = [];
-    if ($type === 'cash') {
-      $payments = $this->getPayments();
-      foreach ($payments as $payment) {
-        if (
-          $payment->getDate()->month == $month &&
-          $payment->getDate()->year == $year
-        ) {
-          $invoices[] = new Invoice(
-            amount: $payment->getAmount(),
-            date: $payment->getDate()
-          );
-        }
-      }
+    $balance = $this->amount;
+    foreach ($this->payments as $payment) {
+      $balance -= $payment->getAmount();
     }
-    if ($type === 'accrual') {
-      $invoices = [];
-      $period = 0;
-      $periods = $this->getPeriods();
-      $baseDate = $this->getDate();
-      while ($period <= $periods) {
-        $date = $baseDate->copy()->addMonths($period++);
-        if ($date->month !== $month || $date->year !== $year) {
-          continue;
-        }
-        $invoices[] = new Invoice(
-          amount: $this->getAmount() / $periods,
-          date: $date
-        );
-      }
-    }
-    return $invoices;
+    return $balance;
+  }
+
+  public function generateInvoices(int $month, int $year, string $type):array
+  {
+    $invoiceGenerationStrategy = InvoiceGenerationFactory::create($type);
+    return $invoiceGenerationStrategy->generate($this, $month, $year, $type);
   }
 }

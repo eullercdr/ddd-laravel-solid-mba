@@ -22,7 +22,7 @@ class GenerateInvoicesUseCase
   public function execute(array $input)
   {
     $output = [];
-    $contracts = $this->repository->list();    
+    $contracts = $this->repository->list();
     foreach ($contracts as $contract) {
       /** @var EntitiesContract $contract */
       $invoices = $contract->generateInvoices($input['month'], $input['year'], $input['type']);
